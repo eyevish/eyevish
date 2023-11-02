@@ -10,4 +10,4 @@ echo -e "\n\n - To access the Kubernetes server and deploy your IMM run the foll
  command from your Windows DOS host with xpi installation using a DOS CMD windows.
    mkdir %userprofile%\.kube
    sudo cat /etc/rancher/k3s/k3s.yaml\" > %userprofile%\.kube\config
-NOTE: The first command may return an error if the folder already exists.
+NOTE: The first command may return an error if the folder already exists."
