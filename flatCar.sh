@@ -3,5 +3,11 @@
 # where you choose to run the deplu scripts - run the following
 # mkdir %userprofile%\.kube
 # ssh core@xpinode1 "sudo cat /etc/rancher/k3s/k3s.yaml" > %userprofile%\.kube\config
-rm ignition.json || wget http://10.9.7.189:8888/ignition.json
-sudo flatcar-install -d /dev/sda -i ignition.json
+rm -f ignition.json || https://github.com/eyevish/eyevish/raw/main/ignition.json
+echo sudo flatcar-install -d /dev/sda -i ignition.json
+
+echo -e "\n\n - To access the Kubernetes server and deploy your IMM run the following 
+ command from your Windows DOS host with xpi installation using a DOS CMD windows.
+   mkdir %userprofile%\.kube
+   sudo cat /etc/rancher/k3s/k3s.yaml\" > %userprofile%\.kube\config
+NOTE: The first command may return an error if the folder already exists.
