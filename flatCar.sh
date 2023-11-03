@@ -13,3 +13,11 @@ echo -e "\n - To access the Kubernetes server and deploy your IMM run the follow
    ssh core@xpinode1 \"sudo cat /etc/rancher/k3s/k3s.yaml\" > %userprofile%\\.kube\\\config              
    \033[0m
 NOTE: The first command may return an error if the folder already exists."
+
+
+	read  -p "If you saw success of flatCar installer, you may boot into the OS; \n Would you reboot ? (Y/[N])" ansYN
+	if  [[ $ansYN =~ [Yy] ]];  then 
+   echo Rebooting ......
+   sudo eject cdrom
+   sudo reboot
+	fi
