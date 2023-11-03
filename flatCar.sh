@@ -8,7 +8,7 @@
 
 rm -f ignition.json || curl -sfL https://github.com/eyevish/eyevish/raw/main/ignition.json -o ignition.json
 sudo flatcar-install -d /dev/sda -i ignition.json
-echo -e "\n=============================================================\n"
+echo -e "\n======================================================================================\n"
 echo -e "\n - To access the Kubernetes server and deploy your IMM run the following 
  command from your Windows DOS host with xpi installation using a DOS CMD windows.    
    \033[0;32m
