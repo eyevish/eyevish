@@ -3,7 +3,7 @@
 # where you choose to run the deplu scripts - run the following
 # mkdir %userprofile%\.kube
 # ssh core@xpinode1 "sudo cat /etc/rancher/k3s/k3s.yaml" > %userprofile%\.kube\config
-rm -f ignition.json || https://github.com/eyevish/eyevish/raw/main/ignition.json
+rm -f ignition.json || curl https://github.com/eyevish/eyevish/raw/main/ignition.json -o ignition.json
 sudo flatcar-install -d /dev/sda -i ignition.json
 echo -e "\n=============================================================\n"
 echo -e "\n - To access the Kubernetes server and deploy your IMM run the following 
