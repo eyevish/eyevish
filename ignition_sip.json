@@ -5,7 +5,7 @@
   "passwd": {
     "users": [
       {
-        "name": "xpi",
+        "name": "core",
         "passwordHash": "$5$8sQ.UsObBL7c$jkjJnzMJvbHiw84TTilObReuJOwXTB3P32YD6uI8bd9"
       }
     ]
@@ -26,6 +26,13 @@
           "source": "https://get.k3s.io"
         },
         "mode": 511
+      },
+      {
+        "path": "/etc/systemd/network/11-static.network",
+        "contents": {
+          "compression": "",
+          "source": "data:,%5BMatch%5D%0AName%3Deth0%0A%5BNetwork%5D%0AAddress%3D172.30.176.11%2F20%0AGateway%3D172.30.176.1%0A"
+        }
       }
     ]
   },
@@ -39,7 +46,7 @@
       {
         "dropins": [
           {
-            "contents": "[Match]\nName=eth0\n[Network]\nAddress=172.30.176.11/20\nGateway=172.30.176.1",
+            "contents": "[Match]\nName=eth0\n[Network]\nAddress=172.30.176.11/20\nGateway=172.30.176.1\n",
             "name": "10-static.network.conf"
           }
         ],
