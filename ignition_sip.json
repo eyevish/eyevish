@@ -46,7 +46,7 @@
       {
         "dropins": [
           {
-            "contents": "[Match]\nName=eth0\n[Network]\nAddress=172.30.176.11/20\nGateway=172.30.176.1\n",
+            "contents": "[Match]\nName=eth0\n[Network]\nAddress=172.30.176.11/20\nGateway=172.30.176.1\nDNS=172.30.176.1\n",
             "name": "10-static.network.conf"
           }
         ],
