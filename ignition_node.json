@@ -16,7 +16,7 @@
         "path": "/etc/hostname",
         "contents": {
           "compression": "",
-          "source": "data:,xpi_node1"
+          "source": "data:,xpi_node2"
         },
         "mode": 420
       },
