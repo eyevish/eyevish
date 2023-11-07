@@ -1,0 +1,41 @@
+{
+  "ignition": {
+    "version": "3.4.0"
+  },
+  "passwd": {
+    "users": [
+      {
+        "name": "core",
+        "passwordHash": "$5$8sQ.UsObBL7c$jkjJnzMJvbHiw84TTilObReuJOwXTB3P32YD6uI8bd9"
+      }
+    ]
+  },
+  "storage": {
+    "files": [
+      {
+        "path": "/etc/hostname",
+        "contents": {
+          "compression": "",
+          "source": "data:,xpi_node1"
+        },
+        "mode": 420
+      },
+      {
+        "path": "/opt/k3s-install.sh",
+        "contents": {
+          "source": "https://get.k3s.io"
+        },
+        "mode": 511
+      }
+    ]
+  },
+  "systemd": {
+    "units": [
+      {
+        "contents": "[Unit]\nDescription=Run K3s script\n#Wants = first-boot-complete.target\nWants = network-online.target\nAfter = network.target network-online.target        \nConditionFirstBoot=yes\nConditionPathExists=/opt/k3s-install.sh\nConditionPathExists=!/opt/bin/k3s\n[Service]\nType=forking\nTimeoutStartSec=180\nRemainAfterExit=yes\nKillMode=process\nEnvironment=\"K3S_TOKEN=secret_edgecluster_token\"\nEnvironment=\"INSTALL_K3S_EXEC='--server' 'https://10.9.7.235:6443'\"\nExecStart=/usr/bin/sh -c \"/opt/k3s-install.sh\"\n[Install]\nWantedBy=multi-user.target\n",
+        "enabled": true,
+        "name": "k3s-install.service"
+      }
+    ]
+  }
+}
