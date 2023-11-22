@@ -24,7 +24,7 @@
         "path": "/etc/systemd/network/11-static.network",
         "contents": {
           "compression": "",
-          "source": "data:,%5BMatch%5D%0AName%3Deth0%0A%5BNetwork%5D%0AAddress%3D172.30.176.11%2F20%0AGateway%3D172.30.176.1%0ADNS%3D172.30.176.1%0A"
+          "source": "data:,%5BMatch%5D%0AName%3Deth0%0A%5BNetwork%5D%0AAddress%3D169.254.1.1%2F16%0AGateway%3D169.254.1.1%0ADNS%3D169.254.1.1%0A"
         }
       }
     ]
