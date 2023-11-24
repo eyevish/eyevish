@@ -1,0 +1,54 @@
+variant: flatcar
+version: 1.1.0
+passwd:
+  users:
+    - name: core
+      password_hash: $5$8sQ.UsObBL7c$jkjJnzMJvbHiw84TTilObReuJOwXTB3P32YD6uI8bd9
+      #ssh_authorized_keys:
+      #  - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDGdByTgSVHq...
+
+storage:
+  files:
+    - path: /etc/hostname
+      mode: 0644      
+      contents:
+        inline: xpi_node1
+ 
+    - path: /opt/k3s-install.sh
+      mode: 0777
+      contents:
+        source: https://get.k3s.io
+    - path: /etc/systemd/network/11-static.network
+      contents:
+        inline: |
+          [Match]
+          Name=eth0
+          [Network]
+          Address=172.30.176.11/20
+          Gateway=172.30.176.1
+          DNS=172.30.176.1
+
+systemd:
+  units:
+    - name: k3s-install.service
+      enabled: true 
+      contents: |
+        [Unit]
+        Description=Run K3s script
+        #Wants = first-boot-complete.target
+        Wants = network-online.target
+        After = network.target network-online.target        
+        ConditionFirstBoot=yes
+        ConditionPathExists=/opt/k3s-install.sh
+        ConditionPathExists=!/opt/bin/k3s
+        [Service]
+        Type=forking
+        TimeoutStartSec=180
+        RemainAfterExit=yes
+        KillMode=process
+        Environment="K3S_TOKEN=secret_edgecluster_token"
+        Environment="INSTALL_K3S_EXEC=--cluster-init"
+        ExecStart=/usr/bin/sh -c "/opt/k3s-install.sh --disable=traefik"
+        [Install]
+        WantedBy=multi-user.target
+
