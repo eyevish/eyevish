@@ -24,9 +24,9 @@ storage:
           [Match]
           Name=eth0
           [Network]
-          Address=172.30.176.11/20
-          Gateway=172.30.176.1
-          DNS=172.30.176.1
+          Address=172.172.0.11/24
+          Gateway=172.172.0.1
+          DNS=8.8.8.8
 
 systemd:
   units:
