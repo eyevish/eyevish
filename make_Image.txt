@@ -1,0 +1,39 @@
+IMM_XPI_BASE_HWE_Level1.vhdx - 
+basic script that defines the level 1 - no microk8s installed - just base minimal OS installed. with static network settings
+basic script that defines the level 2 - no microk8s installed - just base minimal OS installed. with static network settings + K9s
+basic script that defines the level 3 - MicroK8s installed + metallb enabled - just base minimal OS installed. with static network settings + K9s + DNS Enabled
+-----------basic Script ---
+echo alias ping=\'busybox ping\' >>.bash_aliases ;echo alias vi=\'busybox vi\' >>.bash_aliases 
+sudo touch /etc/cloud/cloud-init.disabled;
+sudo apt install nano;
+sudo apt install busybox;
+sudo swapoff -a;
+sudo sed  's/^GRUB_TIMEOUT_STYLE=.*/GRUB_TIMEOUT_STYLE=menu/' /etc/default/grub;
+sudo sed  's/^GRUB_TIMEOUT=.*/GRUB_TIMEOUT=10/' /etc/default/grub;
+sudo sed  's/^\/swap.img/#swap.img/' /etc/fstab;
+sudo apt-get install "linux-cloud-tools-$(uname -r)";
+
+sudo snap install k9s;
+echo alias k9s=\'/snap/k9s/current/bin/k9s\'  >> .bash_aliases;
+history -c;
+---------Add K9s -----
+
+Next step is to extend the image with the following script;
+
+---------Add Microk8s and enable metallb--
+sudo snap install microk8s --classic --channel=1.27/stable;
+sudo microk8s enable dns;
+sudo microk8s enable metallb:192.17.0.11-192.17.0.11;
+sudo usermod -aG microk8s imm;
+mkdir .kube;
+sudo microk8s kubectl config view --raw  > .kube/config;
+echo alias kubectl=\'microk8s kubectl\' >> .bash_aliases ;echo alias k=\'kubectl\' >> .bash_aliases ;
+history -c;
+------------
+
+form a windows machine run the following command in powershell :
+
+ssh imm@192.17.0.11 "microk8s kubectl config view --raw  | sed 's/https:\/\/127\.0\.0\.1:/https:\/\/192.17.0.11:/'" > $ENV:USERPROFILE\.kube\config
+ssh imm@192.17.0.11 "microk8s kubectl config view --raw  | sed 's/https:\/\/127\.0\.0\.1:/https:\/\/192.17.0.11:/'" > %USERPROFILE%\.kube\config
+<IMMDeployFolder>/deploy/deploy-imm.bat imm.xpi.net
+
