@@ -115,7 +115,7 @@ function StartVM {
   if ($yn -ne 'N') {
     Start-VM -Name $VMName
 
-    fnLog "VM started !! Magic xpi monitor should be available @ http://imm.xpi.net/magicmonitor , monitor startup may take a couple of minutes"
+    fnLog "VM started !! `nDomain registered as 'imm.xpi.net'.`nMagic xpi monitor should be available @ http://imm.xpi.net/magicmonitor , monitor startup may take a couple of minutes"
   } else {
     Write-Host "IMM Server was not started. You can open the 'Hyper-V Manager' to start the VM or `nrun the command 'Start-VM -Name $VMName' in a powershell window."
   }
@@ -143,5 +143,5 @@ fnLog "Done :image deploy complete.`n`n"
 StartVM
 
 Write-Host "`t`t============================================================"
-Write-Host '`t`t` Hint: Run "inst_imm.bat -C" to clean up the installation'
+Write-Host '`t`t` Hint: Run "inst_imm.bat -C" for clean up of installation'
 Write-Host "`t`t============================================================"
