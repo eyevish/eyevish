@@ -63,7 +63,15 @@ function CreateVM {
 # the memory and pocessor
 
   fnLog "Begin image extraction."
-  Extract-Zip $vhdx_Arc $InstPath
+  $yn='Y'
+  do {
+    Extract-Zip $vhdx_Arc $InstPath
+    # Loop through a prompt to retry file extract, some servers powershell version seem to fail on first try.
+      if (-not [System.IO.File]::Exists($InstPath)) {
+      $yn= $(fnGetInput "`nThe image extraction seems to have failed, Retry? (Y/N)?" "[YyNn]" "Please enter Y or N...").ToUpper()
+      } else { break }
+  } until ($yn -ne 'Y')
+
   fnLog "Image extraction complete."
   fnLog "Configuring VM begin."
 	New-VM -VHDPath $InstPath$vhdx -Generation 2 -MemoryStartupBytes $MEMSize -Name $VMName -Path $InstPath -SwitchName $ethName
@@ -136,8 +144,8 @@ $yn= $(fnGetInput "`nWould you like to customise these parameters now (Y/N)?" "[
 #------Main section for all action/sequence -----------------------------------
 #================================================================================
 if ($args[0] -eq '-C') { Cleanup }
-custommization
-SetupNet      # CREATE INTERNAL NETwORK
+#custommization
+#SetupNet      # CREATE INTERNAL NETwORK
 CreateVM      #CREATE NEW-VM
 fnLog "Done :image deploy complete.`n`n"
 StartVM
