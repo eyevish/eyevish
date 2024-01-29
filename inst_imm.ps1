@@ -116,14 +116,14 @@ function fnSetMemSize{
   Write-Host "`nAvailable memory in System: $currMemSize GB"
   $MEMSize=[int]$(fnGetInput "Please assign the Mem size in GB " "[4-9]|[1-9][0-9]" "Invalid input - minimum 4 GB required.")
   Write-Host "Memory assigned will be : " -NoNewLine; Write-Host "$MEMSize GB" -ForegroundColor Magenta
-  $MEMSize = $($MEMSize * [Math]::pow(1024,3))
+  $script:MEMSize = $($MEMSize * [Math]::pow(1024,3))
 }
 
 function fnSetCPUSize{
 # Get CPU Size
   $currCPUSize = (Get-WmiObject Win32_Processor | Select-Object -Property NumberOfLogicalProcessors).NumberOfLogicalProcessors
   Write-Host "`nAvailable LogicalProcessors: $currCPUSize"
-  $cpuCount =[int]$(fnGetInput "Please assign the # of processors for the VM" "[1-9]|[1-9][0-9]" "Invalid input - minimum 1 Processor required.")
+  $script:cpuCount =[int]$(fnGetInput "Please assign the # of processors for the VM" "[1-9]|[1-9][0-9]" "Invalid input - minimum 1 Processor required.")
   Write-Host "CPU capacity assigned will be : " -NoNewLine; Write-Host "$cpuCount Processor" -ForegroundColor Magenta
 }
 
