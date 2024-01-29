@@ -41,11 +41,14 @@ function fnGetInput {
   }
 
 function Cleanup {  
-    Remove-VM $VMName -Force
-    Remove-VMSwitch -Name $ethName -Force
-    Remove-NetIPAddress -IPAddress "192.17.0.1" -confirm:$false
-    Remove-NetNat $natName -confirm:$false
-    exit
+    Remove-VM $VMName -Force -ErrorAction Ignore
+    if (-not $?) {fnLog 'VM Removal Failed'}
+    Remove-VMSwitch -Name $ethName -Force -ErrorAction Ignore
+    if (-not $?) {fnLog 'VM Switch Removal Failed'}
+    Remove-NetIPAddress -IPAddress "192.17.0.1" -confirm:$false -ErrorAction Ignore
+    if (-not $?) {fnLog 'NetIPAddress Removal Failed'}
+    Remove-NetNat $natName -confirm:$false -ErrorAction Ignore
+    if (-not $?) {fnLog 'NetNat Removal Failed'}
 }
 
 function Extract-Zip ($ZipFilePath, $Destination){
@@ -85,7 +88,15 @@ function CreateVM {
 function SetupNet {
 # CREATE INTERNAL NETWORK
 If (Get-VMSwitch -Name $ethName -SwitchType Internal  -ErrorAction Ignore) {
-        fnLog "A Virtual Swtich with a similar name already exists  `n->>> `t`tif this was not expected - run the command again with '-C' as argument to clean up."
+    fnLog "A Virtual Swtich with a similar name already exists  `n->>> `t`tif this was not expected - run the command again with '-C' as argument to clean up."
+    $yn= $(fnGetInput "`nWould you like to run Cleanup now?" "[YyNn]" "Please enter Y or N...").ToUpper()
+    if ($yn -eq 'y') {
+      cleanup
+      }else {
+        Write-Host '`nExiting... `nYou can run Cleanup using same command with argument "-C"'
+        exit 
+        }
+
     } else {
         fnLog "Creating VM switch."
         New-VMSwitch -SwitchName $ethName -SwitchType Internal 
@@ -143,7 +154,7 @@ $yn= $(fnGetInput "`nWould you like to customise these parameters now (Y/N)?" "[
 #================================================================================
 #------Main section for all action/sequence -----------------------------------
 #================================================================================
-if ($args[0] -eq '-C') { Cleanup }
+if ($args[0] -eq '-C') { Cleanup ;exit}
 #custommization
 #SetupNet      # CREATE INTERNAL NETwORK
 CreateVM      #CREATE NEW-VM
