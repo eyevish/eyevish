@@ -52,8 +52,16 @@ function Cleanup {
 }
 
 function Extract-Zip ($ZipFilePath, $Destination){
-	$ZipFile = "$(Get-Item $ZipFilePath)"				#Tostring of path of filesname sent
-	#TODO Need to check for Null and $Destination exists to return error where necessary
+    if (-Not (Test-Path $ZipFilePath -ErrorAction Ignore)) {fnLog "Critical: ImageZip file missing - exiting script.";exit}
+    if (-Not (Test-Path $Destination -ErrorAction Ignore)) {
+      # if folder does not exist, create it - this seems to be needed in some server version
+      fnLog 'Warning: Folder "$Destination" does not exist and will be created'
+      if (-Not (New-Item -ItemType Directory -Force -Path $Destination -ErrorAction Ignore)) { 
+      fnLog "Folder $Destination could not be created - exiting script"
+      exit
+        }
+    }
+  	$ZipFile = "$(Get-Item $ZipFilePath)"				#Tostring of path of filename sent
     $Shell = New-Object -Comobject "Shell.Application"
     $SourceZip = $Shell.Namespace($ZipFile).items()
     $DestinationFolder = $Shell.Namespace($Destination)
@@ -70,7 +78,7 @@ function CreateVM {
   do {
     Extract-Zip $vhdx_Arc $InstPath
     # Loop through a prompt to retry file extract, some servers powershell version seem to fail on first try.
-      if (-not [System.IO.File]::Exists($InstPath)) {
+      if (-not [System.IO.File]::Exists($InstPath+$vhdx)) {
       $yn= $(fnGetInput "`nThe image extraction seems to have failed, Retry? (Y/N)?" "[YyNn]" "Please enter Y or N...").ToUpper()
       } else { break }
   } until ($yn -ne 'Y')
@@ -103,7 +111,7 @@ If (Get-VMSwitch -Name $ethName -SwitchType Internal  -ErrorAction Ignore) {
         #New-NetIPAddress -IPAddress 172.172.0.1 -PrefixLength 24 -InterfaceIndex $(Get-NetAdapter -Name "vEthernet (${ethName})" | Select-Object -Exp ifIndex)
         New-NetIPAddress -IPAddress 192.17.0.1 -PrefixLength 24 -InterfaceAlias "vEthernet (${ethName})"
         New-NetNat -Name $natName -InternalIPInterfaceAddressPrefix 192.17.0.0/24
-        fnLog "Adding IP to host"
+        fnLog "Adding IP to host."
         Add-Content -Path $env:windir\System32\drivers\etc\hosts -Value "`n192.17.0.11   imm.xpi.net"
         fnLog "Network configuration complete"
     }
@@ -155,8 +163,8 @@ $yn= $(fnGetInput "`nWould you like to customise these parameters now (Y/N)?" "[
 #------Main section for all action/sequence -----------------------------------
 #================================================================================
 if ($args[0] -eq '-C') { Cleanup ;exit}
-#custommization
-#SetupNet      # CREATE INTERNAL NETwORK
+custommization
+SetupNet      # CREATE INTERNAL NETwORK
 CreateVM      #CREATE NEW-VM
 fnLog "Done :image deploy complete.`n`n"
 StartVM
